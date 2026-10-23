@@ -33,29 +33,22 @@ label{font-size:12px;font-weight:700;color:#556}
 .m h3{margin:0}.mb{display:flex;gap:8px;margin-top:4px}
 .g{background:#1f9d55!important}.r{background:#d93a3a!important}.x{background:#6b7585!important}
 .bs.Band{background:#6b7585}.card.Band{opacity:.75}.rec{white-space:pre-wrap;background:#f4f6f9;border-radius:8px;padding:10px;font-size:13px}
-body.r-worker .no-w,body.r-sub .no-s,body:not(.r-owner) .ow{display:none!important}
-.mini{padding:5px 9px;border:0;border-radius:6px;background:#3b4658;color:#fff;font-size:12px;margin-top:4px}.mini.r{background:#d93a3a}
 .hist{font-size:13px;border-top:1px solid #e3e8ef;padding:6px 0}
 #login{position:fixed;inset:0;background:#0b4fa8;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff;padding:20px}
-.lb{display:flex;flex-direction:column;gap:8px;width:100%;max-width:300px}#login .lb .btn{max-width:none}#login .lb input{max-width:none;letter-spacing:normal;font-size:16px;text-align:left}#login h1{margin:0;font-size:30px}#login input{max-width:260px;text-align:center;font-size:22px;letter-spacing:6px}#login .btn{max-width:260px;flex:none;background:#1f9d55}
+#login h1{margin:0;font-size:30px}#login input{max-width:260px;text-align:center;font-size:22px;letter-spacing:6px}#login .btn{max-width:260px;flex:none;background:#1f9d55}
 .ft{position:fixed;bottom:0;width:100%;background:#111;color:#fff;text-align:center;font-size:11px;padding:9px;z-index:40}.ft b{color:#4ade80}
 </style>
 </head>
 <body>
 <div id="login">
-  <h1>Billing System</h1>
-  <div id="pickBox" class="lb"></div>
-  <div id="pwBox" class="lb" style="display:none"><div id="pwName" style="font-size:20px;font-weight:700;text-align:center"></div>
-    <input id="un" placeholder="Username (malik ke liye: owner)" autocapitalize="off" autocomplete="username"><input type="password" id="pw" placeholder="Password" onkeydown="if(event.key==='Enter')unlock()">
-    <button class="btn" onclick="unlock()">Open</button><button class="btn x" onclick="showPick()">Wapas</button></div>
-  <div id="addBox" class="lb" style="display:none"><div style="font-weight:700;text-align:center">Nayi sheet jorein</div>
-    <input id="aN" placeholder="Sheet ka naam"><input id="aU" placeholder="Google Web app URL (https://script.google.com/...)"><input id="aUn" placeholder="Username (nayi sheet par: apna naya malik username)" autocapitalize="off"><input type="password" id="aP" placeholder="Password">
-    <button class="btn" onclick="addProf()">Jorein</button><button class="btn x" onclick="showPick()">Wapas</button></div>
-  <div id="pwErr" style="color:#ffd0d0;font-weight:700;min-height:20px;text-align:center;max-width:300px"></div>
+  <h1>Subhan ISP</h1><div>Billing system - password likhein</div>
+  <input type="password" id="pw" inputmode="numeric" placeholder="••••" onkeydown="if(event.key==='Enter')unlock()">
+  <button class="btn" onclick="unlock()">Open</button>
+  <div id="pwErr" style="color:#ffd0d0;font-weight:700;min-height:20px"></div>
 </div>
 
 <div id="app" style="display:none">
-  <div class="hdr"><div><h1 id="hName">Subhan ISP</h1><small id="hRole">Billing Collection</small></div><div><button onclick="loadSheet()">🔄</button> <button onclick="openM('menuM')">⋮</button></div></div>
+  <div class="hdr"><div><h1>Subhan ISP</h1><small>Billing Collection</small></div><div><button onclick="loadSheet()">🔄</button> <button onclick="openM('menuM')">⋮</button></div></div>
   <div id="bar"></div>
 
   <div class="top">
@@ -63,13 +56,11 @@ body.r-worker .no-w,body.r-sub .no-s,body:not(.r-owner) .ow{display:none!importa
     <label>Mahina</label><select id="month" onchange="render()"></select>
   </div>
 
-  <div class="top ow" id="vsBox"><label>Kis ke customers dekhein</label><select id="vs" onchange="setVS(this.value)"></select><button class="btn" onclick="sumOpen()">📊 Sab ka summary (sub-dealers)</button></div>
-
   <div class="dash"><div class="tiles">
     <div><b id="dTot">0</b><span>Total bill</span></div><div><b id="dCol" style="color:#1f9d55">0</b><span>Wasool</span></div><div><b id="dRem" style="color:#d93a3a">0</b><span>Baqaya</span></div>
   </div><div class="prog"><i id="dPr" style="width:0"></i></div><div class="cnt" id="dCnt"></div></div>
 
-  <div class="row no-w"><button onclick="custOpen()">➕ Naya customer</button><button onclick="openM('areaM')">🏢 Naya muhalla</button></div>
+  <div class="row"><button onclick="custOpen()">➕ Naya customer</button><button onclick="openM('areaM')">🏢 Naya muhalla</button></div>
 
   <div class="top" style="margin-top:0">
     <input id="search" placeholder="🔍 Naam ya phone se dhoondein" oninput="render()">
@@ -83,7 +74,7 @@ body.r-worker .no-w,body.r-sub .no-s,body:not(.r-owner) .ow{display:none!importa
   <div id="ov">
     <div class="m" id="payM"><h3 id="pTitle"></h3><div id="pInfo" style="font-size:14px"></div>
       <div id="pAmtW"><label>Aaj kitni raqam mili (Rs.)</label><input type="number" id="pAmt"></div>
-      <div class="mb"><button class="btn g" id="pSave" onclick="savePay()">Save payment</button><button class="btn" id="pRec" onclick="showRec(cur)">🧾</button><button class="btn r no-w" id="pReset" onclick="resetPay()">Reset</button><button class="btn x" onclick="closeM()">Band</button></div></div>
+      <div class="mb"><button class="btn g" id="pSave" onclick="savePay()">Save payment</button><button class="btn" id="pRec" onclick="showRec(cur)">🧾</button><button class="btn r" id="pReset" onclick="resetPay()">Reset</button><button class="btn x" onclick="closeM()">Band</button></div></div>
 
     <div class="m" id="custM"><h3 id="cTitle"></h3>
       <input id="cName" placeholder="Customer ka naam"><input id="cPhone" type="tel" placeholder="Phone (03xx...)"><select id="cArea"></select>
@@ -94,47 +85,32 @@ body.r-worker .no-w,body.r-sub .no-s,body:not(.r-owner) .ow{display:none!importa
       <div class="mb"><button class="btn g" onclick="addArea()">Save</button><button class="btn x" onclick="closeM()">Cancel</button></div></div>
 
     <div class="m" id="detM"><h3 id="dName"></h3><div id="dBody" style="font-size:14px"></div>
-      <div class="mb no-w"><button class="btn" onclick="custOpen(cur)">Edit</button><button class="btn r" onclick="delCust()">Delete</button></div>
+      <div class="mb"><button class="btn" onclick="custOpen(cur)">Edit</button><button class="btn r" onclick="delCust()">Delete</button></div>
       <div class="mb"><button class="btn g" onclick="wa(cur)">📲 WhatsApp</button><button class="btn x" onclick="closeM()">Band</button></div></div>
 
     <div class="m" id="recM"><h3>Raseed</h3><div class="rec" id="recT"></div><div class="mb"><button class="btn g" id="recWa" onclick="recWa()">📲 WhatsApp</button><button class="btn x" onclick="closeM()">Band</button></div></div>
-    <div class="m" id="usrM"><h3>Sub-dealers / Workers</h3><div id="usrList" style="max-height:200px;overflow:auto"></div>
-      <b style="font-size:14px">Naya banayein</b><select id="nuRole" onchange="nuCh()"></select><div id="nuParW"><select id="nuPar"></select></div>
-      <input id="nuNm" placeholder="Naam"><input id="nuUn" placeholder="Username (chhote harf/number, 3+)" autocapitalize="off"><input id="nuPw" type="password" placeholder="Password (4+)">
-      <div class="mb"><button class="btn g" onclick="addUser()">Banayein</button><button class="btn x" onclick="closeM()">Band</button></div></div>
-    <div class="m" id="sumM"><h3>Sab ka summary</h3><div id="sumB" style="max-height:55vh;overflow:auto"></div><button class="btn x" onclick="closeM()">Band</button></div>
     <div class="m" id="menuM"><h3>Menu</h3>
-      <button class="btn no-w" onclick="openM('areaM')">🏢 Naya muhalla</button>
-      <button class="btn no-w" onclick="backup()">💾 Backup download karein</button>
-      <button class="btn no-w" onclick="$('rf').click()">📂 Backup restore karein</button>
+      <button class="btn" onclick="openM('areaM')">🏢 Naya muhalla</button>
+      <button class="btn" onclick="backup()">💾 Backup download karein</button>
+      <button class="btn" onclick="$('rf').click()">📂 Backup restore karein</button>
       <input type="file" id="rf" accept=".json" style="display:none" onchange="restore(this)">
-      <button class="btn ow" onclick="setUrl()">🔗 Google Sheet URL set karein</button>
-      <button class="btn" onclick="chPw()">🔑 Password badlein</button>
-      <button class="btn ow" onclick="chName()">✏️ Sheet ka naam badlein</button>
-      <button class="btn ow" onclick="shareLink()">📲 Is sheet ka link workers ko bhejein</button>
-      <button class="btn" onclick="location.reload()">🔀 Doosri sheet kholein</button>
-      <button class="btn r" onclick="delProf()">🗑️ Is sheet ko is phone se hatayein</button>
+      <button class="btn" onclick="setUrl()">🔗 Google Sheet URL set karein</button>
       <button class="btn" onclick="loadSheet()">⬇️ Sheet se data load karein</button>
-      <button class="btn no-w" onclick="syncAll()">☁️ Sab data Sheet mein bhejein</button>
-      <button class="btn no-w" onclick="usrOpen()">👥 Sub-dealers / Workers banayein</button>
-      <button class="btn no-w" onclick="exportXl()">📤 Excel download (customers)</button>
-      <button class="btn no-w" onclick="$('xf').click()">📥 Excel upload (customers)</button>
-      <input type="file" id="xf" accept=".xlsx,.csv" style="display:none" onchange="importXl(this)">
+      <button class="btn" onclick="syncAll()">☁️ Sab data Sheet mein bhejein</button>
       <button class="btn x" onclick="closeM()">Band</button></div>
   </div>
 </div>
 
 <script>
-let CUR=null,PFX='',SK='',ME=null,VS='',USERS=[];
+const KEY="";            // Apps Script ki secret key (optional, code.gs mein bhi wahi likhein)
 const PWH=5596543922622224;
-const DEFAULT_URL="https://script.google.com/macros/s/AKfycbwWpFrp0y_VNkbrQ7g3g3KWtC8EzsMR7J0QIvATYdg0b7KI0181ZiPYFZALeB4FIyRC/exec";
-const U=()=>CUR?CUR.url:'';
+const DEFAULT_URL=""; // yahan apna Web app URL likh dein to har phone par set karna nahi parega
+const U=()=>localStorage.getItem('si_url')||DEFAULT_URL;
 const $=id=>document.getElementById(id);
 const H=s=>{let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0,c;i<s.length;i++){c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0)};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const L=(k,d)=>{try{return JSON.parse(localStorage.getItem(PFX+k))||d}catch(e){return d}};
-const S=(k,v)=>localStorage.setItem(PFX+k,JSON.stringify(v));
-const GS=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const L=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
+const S=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 const p2=n=>String(n).padStart(2,'0');
 const MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const mlabel=v=>MN[+v.slice(5)-1]+' '+v.slice(0,4);
@@ -142,75 +118,11 @@ const today=()=>{const d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1
 const fd=s=>String(s).split('-').reverse().join('-');
 const now=()=>{const d=new Date();return p2(d.getDate())+'-'+p2(d.getMonth()+1)+'-'+d.getFullYear()+' '+p2(d.getHours())+':'+p2(d.getMinutes())};
 
-let areas=[],custs=[],pays={},q=[],cur=null,editId=null,syncing=false;
-let profiles=[];
-try{profiles=JSON.parse(localStorage.getItem('si_profiles'))||[]}catch(e){profiles=[]}
-if(!profiles.length||!Array.isArray(profiles)){profiles=[{id:'p1',name:'Subhan ISP',url:DEFAULT_URL,pwh:String(PWH),accts:{owner:{pwh:String(PWH),role:'owner',scope:'owner',name:'Malik'}}}];GS('si_profiles',profiles)}
+let areas=L('si_areas',["Area 1","Area 2"]),custs=L('si_custs',[]),pays=L('si_pays',{}),q=L('si_q',[]),cur=null,editId=null,syncing=false;
 
-profiles.forEach(p=>{if(!p.accts)p.accts=p.pwh?{owner:{pwh:p.pwh,role:'owner',scope:'owner',name:'Malik'}}:{}});
-const hh=pw=>String(H('sisp|'+pw));
-const srv=async(u,un,k)=>(await fetch(u+(u.includes('?')?'&':'?')+'action=auth&u='+encodeURIComponent(un)+'&k='+encodeURIComponent(k))).json();
-const post=async(u,o)=>(await fetch(u,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(o)})).json();
-let pi=0;
-function showPick(){
-  ['pwBox','addBox'].forEach(i=>$(i).style.display='none');$('pickBox').style.display='flex';$('pwErr').textContent='';
-  $('pickBox').innerHTML=profiles.map((p,i)=>`<button class="btn" onclick="pickP(${i})">${esc(p.name)}</button>`).join('')+'<button class="btn x" onclick="showAdd()">➕ Nayi sheet jorein</button>';
-}
-function pickP(i){pi=i;$('pickBox').style.display='none';$('pwBox').style.display='flex';$('pwName').textContent=profiles[i].name;$('un').value=profiles[i].uname||'';$('pw').value='';$('pwErr').textContent='';$('pw').focus()}
-function showAdd(n,u){$('pickBox').style.display='none';$('addBox').style.display='flex';$('aN').value=n||'';$('aU').value=u||'';$('aP').value='';$('pwErr').textContent=''}
-async function unlock(){
-  const p=profiles[pi],un=($('un').value.trim()||'owner').toLowerCase(),h=hh($('pw').value),e=m=>{$('pwErr').textContent=m;$('pw').value=''};$('pwErr').textContent='';
-  let a=null;const o=p.accts[un],cached=o&&o.pwh===h?o:null;
-  if(p.url&&navigator.onLine){
-    try{const j=await srv(p.url,un,h);
-      if(j.ok&&j.open){if(cached){await post(p.url,{u:un,k:h,act:'setup',hash:h});const j2=await srv(p.url,un,h);if(j2.ok&&!j2.open)a=j2}}
-      else if(j.ok)a=j}
-    catch(x){a=cached}
-  }else a=cached;
-  if(!a)return e('Username ya password galat hai');
-  p.accts[un]={pwh:h,role:a.role,scope:a.scope,name:a.name||un};p.uname=un;GS('si_profiles',profiles);
-  start(p,h,un,p.accts[un]);
-}
-function start(p,h,un,a){
-  CUR=p;SK=h;ME={u:un,role:a.role,scope:a.scope,name:a.name};VS=a.scope;
-  PFX=(p.id==='p1'&&un==='owner')?'':p.id+'_'+un+'_';
-  areas=L('si_areas',["Area 1","Area 2"]);custs=L('si_custs',[]).map(c=>({...c,own:c.own||a.scope}));pays=L('si_pays',{});q=L('si_q',[]);
-  document.body.className='r-'+a.role;
-  $('login').style.display='none';$('app').style.display='block';$('hName').textContent=p.name;
-  $('hRole').textContent=a.name+' ('+({owner:'Malik',sub:'Sub-dealer',worker:'Worker'}[a.role])+')';document.title=p.name+' - Billing';init();
-}
-async function addProf(){
-  const n=$('aN').value.trim(),u=$('aU').value.trim(),un=($('aUn').value.trim()||'owner').toLowerCase(),pw=$('aP').value,e=m=>$('pwErr').textContent=m;
-  if(!n||!/^https:\/\/script\.google\.com\//.test(u)||pw.length<4)return e('Naam, sahi URL aur kam az kam 4 harf ka password likhein');
-  if(profiles.some(p=>p.url===u))return e('Ye sheet pehle se list mein hai');
-  const h=hh(pw);let a;
-  try{
-    let j=await srv(u,un,h);
-    if(j.ok&&j.open){if(prompt('Naya password dobara likhein (confirm):')!==pw)return e('Password match nahi hua');if(!(await post(u,{u:un,k:h,act:'setup',hash:h})).ok)throw 0;j=await srv(u,un,h)}
-    if(!j.ok||j.open)return e('Username ya password galat hai');a=j;
-  }catch(x){return e('Sheet se rabta nahi hua. URL aur internet check karein')}
-  profiles.push({id:'p'+Date.now(),name:n,url:u,uname:un,accts:{[un]:{pwh:h,role:a.role,scope:a.scope,name:a.name||un}}});GS('si_profiles',profiles);showPick();
-}
-function lockOut(){alert('Password badal gaya hai ya galat hai. Dobara login karein.');if(CUR&&ME&&CUR.accts[ME.u])CUR.accts[ME.u].pwh='';GS('si_profiles',profiles);location.reload()}
-async function chPw(){
-  if(hh(prompt('Purana password:')||'')!==SK)return alert('Purana password galat hai');
-  const n=prompt('Naya password (kam az kam 4 harf):');if(n===null)return;if(n.length<4)return alert('Password chhota hai');
-  if(prompt('Naya password dobara likhein:')!==n)return alert('Dono password mel nahi khate');
-  if(!navigator.onLine||!CUR.url)return alert('Password badalne ke liye internet aur Sheet URL zaroori hai');
-  const nh=hh(n);
-  try{if(!(await post(CUR.url,{u:ME.u,k:SK,act:'setpw',hash:nh})).ok)throw 0;CUR.accts[ME.u].pwh=nh;SK=nh;GS('si_profiles',profiles);closeM();alert('Password badal gaya. Doosre phoneon par ab naya password chalega.')}
-  catch(e){alert('Password nahi badla. Internet ya URL check karein.')}
-}
-function chName(){const n=prompt('Sheet ka naam:',CUR.name);if(n&&n.trim()){CUR.name=n.trim();GS('si_profiles',profiles);$('hName').textContent=CUR.name;document.title=CUR.name+' - Billing';closeM()}}
-function shareLink(){
-  const u=location.href.split('#')[0]+'#add='+btoa(unescape(encodeURIComponent(JSON.stringify({n:CUR.name,u:CUR.url}))));
-  try{navigator.clipboard.writeText(u)}catch(e){}
-  window.open('https://wa.me/?text='+encodeURIComponent(CUR.name+' billing link (password alag se batayein): '+u),'_blank');
-}
-function delProf(){
-  if(!confirm('Is sheet ko is phone se hatana hai? Google Sheet ka data nahi mitega, lekin is phone ka data hat jayega.'))return;
-  ['si_areas','si_custs','si_pays','si_q'].forEach(k=>localStorage.removeItem(PFX+k));
-  profiles=profiles.filter(p=>p!==CUR);GS('si_profiles',profiles);location.reload();
+function unlock(){
+  if(H('sisp|'+$('pw').value)===PWH){$('login').style.display='none';$('app').style.display='block';init()}
+  else{$('pwErr').textContent='Password galat hai';$('pw').value=''}
 }
 function init(){
   $('worker').value=localStorage.getItem('si_w')||'';
@@ -235,7 +147,7 @@ function render(){
   fillAreas();
   const m=$('month').value,t=$('search').value.toLowerCase(),a=$('areaF').value,f=$('statF').value;
   let h='',n=0,tot=0,col=0,exN=0,cnt={Paid:0,Partial:0,Unpaid:0};
-  custs.filter(c=>c.own===VS).forEach(c=>{
+  custs.forEach(c=>{
     const exp=c.status!=='Band'&&!!c.exp&&c.exp<today();if(exp)exN++;
     if(c.since&&c.since>m&&f!=='Expired')return;
     const x=st(c,m),band=c.status==='Band';
@@ -289,13 +201,13 @@ function custOpen(id){
   $('cName').value=c.name||'';$('cPhone').value=c.phone||'';$('cPkg').value=c.pkg||'';$('cBill').value=c.bill||'';
   $('cSince').value=c.since||(id?'':$('month').value);$('cStat').value=c.status||'Active';$('cExp').value=c.exp||'';$('cPrev').value=c.prev||'';if(c.area)$('cArea').value=c.area;openM('custM');
 }
-function qCust(c,del){q.push({t:'cust',own:c.own||VS,id:c.id,name:c.name,phone:c.phone||'',area:c.area,pkg:c.pkg||'',bill:c.bill,status:c.status||'Active',since:c.since||'',exp:c.exp||'',prev:c.prev||0,pm:c.pm||'',del:del?1:0});S('si_q',q);S('si_custs',custs)}
+function qCust(c,del){q.push({t:'cust',id:c.id,name:c.name,phone:c.phone||'',area:c.area,pkg:c.pkg||'',bill:c.bill,status:c.status||'Active',since:c.since||'',exp:c.exp||'',prev:c.prev||0,pm:c.pm||'',del:del?1:0});S('si_q',q);S('si_custs',custs)}
 function saveCust(){
   const name=$('cName').value.trim(),bill=+$('cBill').value;
   if(!name||!(bill>0))return alert('Naam aur bill dono likhein');
   const o={name,phone:$('cPhone').value.trim(),area:$('cArea').value,pkg:$('cPkg').value.trim(),bill,since:$('cSince').value,status:$('cStat').value,exp:$('cExp').value,prev:+$('cPrev').value||0};
   let c;
-  if(editId){c=custs.find(x=>x.id===editId);o.pm=o.prev?(c.prev===o.prev&&c.pm?c.pm:$('month').value):'';Object.assign(c,o)}else{c={id:Date.now(),own:VS,...o,pm:o.prev?$('month').value:''};custs.push(c)}
+  if(editId){c=custs.find(x=>x.id===editId);o.pm=o.prev?(c.prev===o.prev&&c.pm?c.pm:$('month').value):'';Object.assign(c,o)}else{c={id:Date.now(),...o,pm:o.prev?$('month').value:''};custs.push(c)}
   qCust(c);closeM();render();sync();
 }
 function addArea(){
@@ -328,27 +240,21 @@ function backup(){
 function restore(inp){
   const f=inp.files[0];if(!f)return;const r=new FileReader();
   r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.custs)||!d.pays)throw 0;
-    if(!confirm('Is hisab ('+VS+') ki jagah backup ka data aayega. Jaari rakhein?'))return;
-    const old=new Set(custs.filter(c=>c.own===VS).map(c=>String(c.id)));
-    Object.keys(pays).forEach(k=>{if(old.has(k.split('_')[1]))delete pays[k]});
-    custs=custs.filter(c=>c.own!==VS).concat(d.custs.map(c=>({...c,own:VS})));Object.assign(pays,d.pays);
-    areas=d.areas||areas;S('si_areas',areas);S('si_custs',custs);S('si_pays',pays);closeM();render();if(U())syncAll()}
+    if(!confirm('Maujooda data ki jagah backup ka data aayega. Jaari rakhein?'))return;
+    areas=d.areas||areas;custs=d.custs;pays=d.pays;S('si_areas',areas);S('si_custs',custs);S('si_pays',pays);closeM();render();if(U())syncAll()}
     catch(e){alert('Ye sahi backup file nahi hai')}};
   r.readAsText(f);inp.value='';
 }
 
 function setUrl(){
-  const u=prompt('Apni Google Apps Script Web App ka URL paste karein:',CUR.url||'');
-  if(u!==null){CUR.url=u.trim();GS('si_profiles',profiles);closeM();if(u.trim())custs.length?syncAll():loadSheet()}
+  const u=prompt('Apni Google Apps Script Web App ka URL paste karein:',localStorage.getItem('si_url')||'');
+  if(u!==null){localStorage.setItem('si_url',u.trim());closeM();if(u.trim())custs.length?syncAll():loadSheet()}
 }
-async function syncAll(){
+function syncAll(){
   if(!U())return alert('Pehle Google Sheet URL set karein');
-  if(q.length){await sync();if(q.length)return alert('Pehle baqaya sync poora hone dein, phir dobara koshish karein')}
-  if(!confirm('Is hisab ('+VS+') ka sab data Sheet mein dobara bhejna hai?'))return;
-  const mine=custs.filter(c=>c.own===VS),ids=new Set(mine.map(c=>String(c.id)));
-  q=[{t:'reset',own:VS}].concat(mine.map(c=>({t:'cust',own:VS,id:c.id,name:c.name,phone:c.phone||'',area:c.area,pkg:c.pkg||'',bill:c.bill,status:c.status||'Active',since:c.since||'',exp:c.exp||'',prev:c.prev||0,pm:c.pm||'',del:0})));
-  Object.keys(pays).forEach(k=>{const[m,id]=k.split('_'),c=mine.find(x=>String(x.id)===id);if(!c)return;const p=pays[k],x=st(c,m);
-    q.push({t:'pay',key:k,month:m,id:c.id,name:c.name,area:c.area,phone:c.phone||'',pkg:c.pkg||'',bill:c.bill,paid:p.paid,rem:x.rem,status:x.s,date:p.date,worker:p.worker})});
+  q=[{t:'reset'}];q=q.concat(custs.map(c=>({t:'cust',id:c.id,name:c.name,phone:c.phone||'',area:c.area,pkg:c.pkg||'',bill:c.bill,status:c.status||'Active',since:c.since||'',exp:c.exp||'',prev:c.prev||0,pm:c.pm||'',del:0})));
+  Object.keys(pays).forEach(k=>{const[m,id]=k.split('_'),c=custs.find(x=>x.id==id);if(!c)return;const p=pays[k];
+    q.push({t:'pay',key:k,month:m,id:c.id,name:c.name,area:c.area,phone:c.phone||'',pkg:c.pkg||'',bill:c.bill,paid:p.paid,rem:st(c,m).rem,status:st(c,m).s,date:p.date,worker:p.worker})});
   S('si_q',q);closeM();sync();
 }
 async function sync(){
@@ -357,9 +263,9 @@ async function sync(){
   syncing=true;const n=q.length,batch=q.slice(0,n);
   bar('Sheet mein '+n+' records bhej rahe hain...','#ffc107','#000');
   try{
-    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({u:ME.u,k:SK,items:batch})});
-    const j=await r.json();if(j.error==='auth')return lockOut();if(!j.ok)throw new Error('server');
-    q=q.slice(n);S('si_q',q);bar(j.denied?'Kuch records allowed nahi the (ijazat nahi)':'Google Sheet mein save ho gaya ✓',j.denied?'#e8a317':'#1f9d55','#fff',3500);
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({key:KEY,items:batch})});
+    const j=await r.json();if(!j.ok)throw new Error('server');
+    q=q.slice(n);S('si_q',q);bar('Google Sheet mein save ho gaya ✓','#1f9d55','#fff',3000);
   }catch(e){bar('Sync nahi hua. Data phone mein mehfooz hai, net aane par dobara bhejega.','#d93a3a','#fff',4500)}
   syncing=false;render();
 }
@@ -380,212 +286,19 @@ async function loadSheet(){
   if(q.length){await sync();if(q.length)return}
   bar('Sheet se data la rahe hain...','#ffc107','#000');
   try{
-    const r=await fetch(url+(url.includes('?')?'&':'?')+'action=load&u='+encodeURIComponent(ME.u)+'&k='+encodeURIComponent(SK));
-    const j=await r.json();if(j.error==='auth')return lockOut();if(!j.ok)throw 0;
-    
-    const rawCusts = Array.isArray(j.custs) ? j.custs : [];
-    USERS = Array.isArray(j.users) ? j.users : [];
-
-    custs=rawCusts.map(c=>({id:+c.id,name:String(c.name),phone:String(c.phone||''),area:String(c.area||''),pkg:String(c.pkg||''),bill:+c.bill,status:c.status==='Band'?'Band':'Active',since:String(c.since||''),exp:String(c.exp||''),prev:+c.prev||0,pm:String(c.pm||''),own:String(c.own||ME.scope)}));
-    
+    const r=await fetch(url+(url.includes('?')?'&':'?')+'action=load&key='+encodeURIComponent(KEY));
+    const j=await r.json();if(!j.ok)throw 0;
+    if(!j.custs.length&&custs.length){bar('Sheet khali hai, phone ka data rakha gaya','#e8a317','#000',3500);return}
+    custs=j.custs.map(c=>({id:+c.id,name:String(c.name),phone:String(c.phone||''),area:String(c.area||''),pkg:String(c.pkg||''),bill:+c.bill,status:c.status==='Band'?'Band':'Active',since:String(c.since||''),exp:String(c.exp||''),prev:+c.prev||0,pm:String(c.pm||'')}));
     const ids=new Set(custs.map(c=>c.id)),oldp=pays;pays={};
-    const rawPays = Array.isArray(j.pays) ? j.pays : [];
-    rawPays.forEach(p=>{const id=p.key.split('_')[1];if(ids.has(+id)&&+p.paid>0)pays[p.key]={paid:+p.paid,date:String(p.date||''),worker:String(p.worker||''),ext:(oldp[p.key]||{}).ext,extn:(oldp[p.key]||{}).extn}});
-    
+    j.pays.forEach(p=>{const id=p.key.split('_')[1];if(ids.has(+id)&&+p.paid>0)pays[p.key]={paid:+p.paid,date:String(p.date||''),worker:String(p.worker||''),ext:(oldp[p.key]||{}).ext,extn:(oldp[p.key]||{}).extn}});
     custs.forEach(c=>{if(c.area&&!areas.includes(c.area))areas.push(c.area)});
-    fillVS();S('si_custs',custs);S('si_pays',pays);S('si_areas',areas);
+    S('si_custs',custs);S('si_pays',pays);S('si_areas',areas);
     bar('Sheet se data aa gaya ✓','#1f9d55','#fff',2500);
   }catch(e){bar('Sheet se data nahi aaya. Phone ka data dikha rahe hain.','#d93a3a','#fff',4000)}
   render();
 }
-function fillVS(){
-  if(!ME||ME.role!=='owner')return;
-  const userList = Array.isArray(USERS) ? USERS : [];
-  const vsEl = $('vs');
-  if(!vsEl) return;
-  vsEl.innerHTML=`<option value="${esc(ME.scope)}">Mere customers</option>`+userList.filter(u=>u.role==='sub').map(u=>`<option value="${esc(u.username)}">${esc(u.name||u.username)} (sub-dealer)</option>`).join('');
-  VS=[...vsEl.options].some(o=>o.value===VS)?VS:ME.scope;vsEl.value=VS;
-}
-function setVS(v){VS=v;render()}
-function stats(list,m){let tot=0,col=0,n=0,ex=0;list.forEach(c=>{if(c.status==='Band'||(c.since&&c.since>m))return;const x=st(c,m);tot+=x.total;col+=Math.min(x.paid,x.total);n++;if(c.exp&&c.exp<today())ex++});return{tot,col,rem:tot-col,n,ex}}
-function sumOpen(){
-  const m=$('month').value;
-  const userList = Array.isArray(USERS) ? USERS : [];
-  const sc=[{u:ME.scope,n:'Mere customers'}].concat(userList.filter(u=>u.role==='sub').map(u=>({u:u.username,n:(u.name||u.username)+' (sub-dealer)'})));
-  const all={tot:0,col:0,rem:0,n:0,ex:0};
-  const rows=sc.map(s=>{const t=stats(custs.filter(c=>c.own===s.u),m);for(const k in all)all[k]+=t[k];
-    return `<div class="hist" style="cursor:pointer" onclick="setVS2('${esc(s.u)}')"><b>${esc(s.n)}</b><br>Customers ${t.n} | Bill ${t.tot} | Wasool ${t.col} | Baqaya <b style="color:#d93a3a">${t.rem}</b> | Expired ${t.ex}</div>`}).join('');
-  $('sumB').innerHTML=`<div style="font-weight:700">${mlabel(m)}</div>`+rows+`<div class="hist"><b>Kul (sab ka)</b><br>Customers ${all.n} | Bill ${all.tot} | Wasool ${all.col} | Baqaya ${all.rem} | Expired ${all.ex}</div>`;
-  openM('sumM');
-}
-function setVS2(u){$('vs').value=u;setVS(u);closeM()}
-const RL={owner:'Malik',sub:'Sub-dealer',worker:'Worker'};
-const MSG={exists:'Ye username pehle se maujood hai',bad:'Username sirf chhote harf/number/_ . - (3 se 20) aur password kam az kam 4 harf ka ho',forbidden:'Aap ko is ki ijazat nahi',has_customers:'Is sub-dealer ke customers maujood hain. Pehle unhein hata dein'};
-function usrOpen(){
-  const own=ME.role==='owner';
-  $('nuRole').innerHTML=(own?'<option value="sub">Sub-dealer</option>':'')+'<option value="worker">Worker</option>';
-  const userList = Array.isArray(USERS) ? USERS : [];
-  $('nuPar').innerHTML=`<option value="${esc(ME.scope)}">Mere under</option>`+(own?userList.filter(u=>u.role==='sub').map(u=>`<option value="${esc(u.username)}">${esc(u.name||u.username)} ke under</option>`).join(''):'');
-  nuCh();renderUsers();openM('usrM');
-}
-function nuCh(){$('nuParW').style.display=($('nuRole').value==='worker'&&ME.role==='owner')?'block':'none'}
-function renderUsers(){
-  const userList = Array.isArray(USERS) ? USERS : [];
-  $('usrList').innerHTML=userList.filter(u=>u.role!=='owner').map(u=>`<div class="hist"><b>${esc(u.name||u.username)}</b> (${esc(u.username)}) - ${RL[u.role]}${u.role==='worker'?' | '+esc(u.parent):''}<br><button class="mini" onclick="resetUser('${esc(u.username)}')">🔑 Password reset</button> <button class="mini r" onclick="delUser('${esc(u.username)}')">🗑️ Hatayein</button></div>`).join('')||'<div class="hist">Abhi koi nahi</div>';
-}
-
-async function uact(o){
-  if(!navigator.onLine||!U())return alert('Internet aur Sheet URL zaroori hai');
-  try{
-    const res = await post(CUR.url,{u:ME.u,k:SK,...o});
-    if(res && res.error==='auth')return lockOut();
-    
-    if(res && Array.isArray(res.users)) {
-      USERS = res.users;
-    } else {
-      if(!Array.isArray(USERS)) USERS = [];
-      if(o.act === 'adduser') {
-        if(!USERS.some(u => u.username === o.username)) {
-          USERS.push({username: o.username, name: o.name || o.username, role: o.role, parent: o.parent||''});
-        }
-      } else if(o.act === 'deluser') {
-        USERS = USERS.filter(u => u.username !== o.username);
-      }
-    }
-    renderUsers();
-    closeM();
-    alert('Kamyabi se ho gaya!');
-    return true;
-  }
-  catch(e){
-    if(!Array.isArray(USERS)) USERS = [];
-    if(o.act === 'adduser') {
-      if(!USERS.some(u => u.username === o.username)) {
-        USERS.push({username: o.username, name: o.name || o.username, role: o.role, parent: o.parent||''});
-      }
-    } else if(o.act === 'deluser') {
-      USERS = USERS.filter(u => u.username !== o.username);
-    }
-    renderUsers();
-    closeM();
-    alert('Kamyabi se ho gaya!');
-    return true;
-  }
-}
-
-async function addUser(){
-  const un=$('nuUn').value.trim().toLowerCase(),pw=$('nuPw').value,nm=$('nuNm').value.trim()||un,role=$('nuRole').value;
-  if(!/^[a-z0-9_.-]{3,20}$/.test(un)||pw.length<4)return alert(MSG.bad);
-  if(await uact({act:'adduser',username:un,hash:hh(pw),role,parent:role==='worker'?$('nuPar').value:'',name:nm})){$('nuUn').value=$('nuPw').value=$('nuNm').value='';}
-}
-async function resetUser(un){const pw=prompt('Is ka naya password (kam az kam 4 harf):');if(pw===null)return;if(pw.length<4)return alert('Password chhota hai');if(await uact({act:'resetpw',username:un,hash:hh(pw)}))alert('Password badal gaya')}
-async function delUser(un){if(!confirm(un+' ko hatana hai?'))return;await uact({act:'deluser',username:un})}
-
-// ---------- Excel (xlsx) download / upload - koi bahari library nahi
-const crcT=(()=>{const t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
-const crc=u=>{let c=-1;for(let i=0;i<u.length;i++)c=crcT[(c^u[i])&255]^(c>>>8);return(c^-1)>>>0};
-function zip(files){
-  const te=new TextEncoder(),parts=[],cd=[];let off=0;const names=Object.keys(files);
-  for(const n of names){const nb=te.encode(n),d=te.encode(files[n]),c=crc(d);
-    const lh=new DataView(new ArrayBuffer(30));lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint32(14,c,true);lh.setUint32(18,d.length,true);lh.setUint32(22,d.length,true);lh.setUint16(26,nb.length,true);
-    parts.push(new Uint8Array(lh.buffer),nb,d);
-    const ch=new DataView(new ArrayBuffer(46));ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint32(16,c,true);ch.setUint32(20,d.length,true);ch.setUint32(24,d.length,true);ch.setUint16(28,nb.length,true);ch.setUint32(42,off,true);
-    cd.push(new Uint8Array(ch.buffer),nb);off+=30+nb.length+d.length}
-  const cs=cd.reduce((a,x)=>a+x.length,0),ed=new DataView(new ArrayBuffer(22));ed.setUint32(0,0x06054b50,true);ed.setUint16(8,names.length,true);ed.setUint16(10,names.length,true);ed.setUint32(12,cs,true);ed.setUint32(16,off,true);
-  return new Blob([...parts,...cd,new Uint8Array(ed.buffer)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-}
-function xlsx(rows){
-  const X=v=>String(v).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])),L1=i=>String.fromCharCode(65+i),H1='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
-  const sd=rows.map((r,ri)=>`<row r="${ri+1}">`+r.map((v,ci)=>typeof v==='number'?`<c r="${L1(ci)}${ri+1}"><v>${v}</v></c>`:`<c r="${L1(ci)}${ri+1}" t="inlineStr"><is><t>${X(v)}</t></is></c>`).join('')+'</row>').join('');
-  return zip({'[Content_Types].xml':H1+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>',
-  '_rels/.rels':H1+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>',
-  'xl/workbook.xml':H1+'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Customers" sheetId="1" r:id="rId1"/></sheets></workbook>',
-  'xl/_rels/workbook.xml.rels':H1+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>',
-  'xl/worksheets/sheet1.xml':H1+'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>'+sd+'</sheetData></worksheet>'});
-}
-async function unzip(buf){
-  const v=new DataView(buf),u8=new Uint8Array(buf);let e=u8.length-22;while(e>=0&&v.getUint32(e,true)!==0x06054b50)e--;if(e<0)throw 0;
-  const n=v.getUint16(e+10,true);let p=v.getUint32(e+16,true);const out={};
-  for(let i=0;i<n;i++){const meth=v.getUint16(p+10,true),cs=v.getUint32(p+20,true),nl=v.getUint16(p+28,true),xl=v.getUint16(p+30,true),cl=v.getUint16(p+32,true),lo=v.getUint32(p+42,true),name=new TextDecoder().decode(u8.subarray(p+46,p+46+nl));
-    const ds=lo+30+v.getUint16(lo+26,true)+v.getUint16(lo+28,true),data=u8.subarray(ds,ds+cs);
-    out[name]=meth===0?data:new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());p+=46+nl+xl+cl}
-  return out;
-}
-function shp(f,td){try{const wb=td.decode(f['xl/workbook.xml']),rl=td.decode(f['xl/_rels/workbook.xml.rels']);
-  const s=[...wb.matchAll(/<sheet\b[^>]*>/g)].map(m=>({n:(/name="([^"]*)"/.exec(m[0])||[])[1]||'',id:(/r:id="([^"]*)"/.exec(m[0])||[])[1]})).find(x=>/^users$|customer/i.test(x.n));
-  if(!s)return '';const r=[...rl.matchAll(/<Relationship\b[^>]*>/g)].map(m=>m[0]).find(t=>t.includes('Id="'+s.id+'"'));
-  const tg=(/Target="([^"]*)"/.exec(r)||[])[1]||'';return tg[0]==='/'?tg.slice(1):'xl/'+tg}catch(e){return ''}}
-async function readXlsx(buf){
-  const f=await unzip(buf),td=new TextDecoder(),X=s=>s.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&amp;/g,'&');
-  const sh=f[shp(f,new TextDecoder())]||f['xl/worksheets/sheet1.xml']||f[Object.keys(f).find(k=>/worksheets\/sheet\d+\.xml$/.test(k))];if(!sh)throw 0;
-  const T=b=>X([...b.matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map(x=>x[1]).join(''));
-  const ss=f['xl/sharedStrings.xml']?[...td.decode(f['xl/sharedStrings.xml']).matchAll(/<si>([\s\S]*?)<\/si>/g)].map(m=>T(m[1])):[];
-  const rows=[];
-  for(const rm of td.decode(sh).matchAll(/<row\b[^>]*?(?<!\/)>([\s\S]*?)<\/row>/g)){const row=[];
-    for(const cm of rm[1].matchAll(/<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)){
-      const r=/r="([A-Z]+)\d+"/.exec(cm[1]),t=/t="(\w+)"/.exec(cm[1]),body=cm[2]||'';if(!r)continue;let ci=0;for(const ch of r[1])ci=ci*26+ch.charCodeAt(0)-64;ci--;
-      const vm=/<v>([\s\S]*?)<\/v>/.exec(body);let v='';
-      if(t&&t[1]==='s'&&vm)v=ss[+vm[1]]??'';else if(t&&t[1]==='inlineStr')v=T(body);else if(vm)v=(t&&(t[1]==='str'||t[1]==='e'))||isNaN(+vm[1])?X(vm[1]):+vm[1];
-      row[ci]=v}
-    rows.push(row)}
-  return rows;
-}
-function parseCsv(t){
-  t=t.replace(/^\uFEFF/,'');const rows=[];let r=[],c='',qq=false;
-  for(let i=0;i<t.length;i++){const ch=t[i];
-    if(qq){if(ch==='"'){if(t[i+1]==='"'){c+='"';i++}else qq=false}else c+=ch}
-    else if(ch==='"')qq=true;else if(ch===','){r.push(c);c=''}
-    else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&t[i+1]==='\n')i++;r.push(c);rows.push(r);r=[];c=''}else c+=ch}
-  if(c!==''||r.length){r.push(c);rows.push(r)}return rows;
-}
-const ph=v=>{let x=String(v).replace(/\D/g,'');if(x.length===10&&x[0]==='3')x='0'+x;return x};
-function pd(v){
-  if(v===''||v==null)return '';if(typeof v==='number')return v>20000?new Date(Math.round((v-25569)*864e5)).toISOString().slice(0,10):'';
-  const s=String(v).trim();let m=/^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(s);if(m)return m[1]+'-'+p2(m[2])+'-'+p2(m[3]);
-  m=/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})/.exec(s);return m?m[3]+'-'+p2(m[2])+'-'+p2(m[1]):'';
-}
-function pmo(v){if(v===''||v==null)return '';const m=/^(\d{4})-(\d{1,2})$/.exec(String(v).trim());return m?m[1]+'-'+p2(m[2]):pd(v).slice(0,7)}
-const num=v=>{if(v===''||v==null)return NaN;return typeof v==='number'?v:+String(v).replace(/,/g,'').trim()};
-const FK=[['prev',['previous','prev','baqaya','arrear']],['paid',['paid','received','wasool']],['exp',['expire','expiry','due','validity']],['since',['connection','since','joining']],['status',['status','state']],['pkg',['package','pkg','plan','speed']],['area',['area','muhalla','zone']],['phone',['phone','mobile','cell','contact']],['bill',['bill','rate','monthly','charges','fee']],['name',['name','naam','customer']]];
-function exportXl(){
-  const m=$('month').value,rows=[['Name','Phone','Area','Package','Bill','Status','Connection Month','Expire Date','Previous Balance','Paid '+m]];
-  custs.filter(c=>c.own===VS).forEach(c=>{const p=pays[m+'_'+c.id];rows.push([c.name,c.phone||'',c.area||'',c.pkg||'',c.bill,c.status||'Active',c.since||'',c.exp||'',c.prev||0,p?p.paid:0])});
-  const a=document.createElement('a');a.href=URL.createObjectURL(xlsx(rows));a.download='customers-'+VS+'-'+m+'.xlsx';a.click();closeM();
-}
-async function importXl(inp){
-  const f=inp.files[0];inp.value='';if(!f)return;
-  try{
-    const buf=await f.arrayBuffer(),rows=/\.csv$/i.test(f.name)?parseCsv(new TextDecoder().decode(buf)):await readXlsx(buf);
-    const hi=rows.findIndex(r=>r&&r.some(x=>x!==''&&x!=null));if(hi<0)throw 0;
-    const col={},ni=(rows[hi]||[]).findIndex(h=>/^\s*(customer\s*name|name|naam)\s*$/i.test(String(h)));if(ni>=0)col.name=ni;(rows[hi]||[]).forEach((h,i)=>{const s=typeof h==='number'&&h>40000?'due date':String(h).toLowerCase();for(const[k,w]of FK)if(w.some(x=>s.includes(x))){if(col[k]==null)col[k]=i;break}});
-    if(col.name==null)return alert('Excel mein "Name" ka column nahi mila');
-    const m=$('month').value,ix={};custs.filter(c=>c.own===VS).forEach(c=>ix[c.name.trim().toLowerCase()]=c);
-    const g=(r,k)=>col[k]==null?undefined:r[col[k]];const nw=[],up=[],seen={};let skip=0;
-    rows.slice(hi+1).forEach(r=>{
-      const nm=String(g(r,'name')??'').trim();if(!nm)return;const key=nm.toLowerCase();if(seen[key]){skip++;return}seen[key]=1;const o={};
-      const ar=String(g(r,'area')??'').trim(),pk=String(g(r,'pkg')??'').trim(),pn=g(r,'phone'),bl=num(g(r,'bill')),pv=num(g(r,'prev')),pa=num(g(r,'paid')),stt=String(g(r,'status')??'').trim(),sn=pmo(g(r,'since')),ex=pd(g(r,'exp'));
-      if(ar)o.area=ar;if(pk)o.pkg=pk;if(pn!==undefined&&pn!=='')o.phone=ph(pn);if(bl>0)o.bill=bl;if(!isNaN(pv))o.prev=pv;if(pa>0)o.paid=pa;
-      if(stt)o.status=/band|inactive|disconnect|off/i.test(stt)?'Band':'Active';if(sn)o.since=sn;if(ex)o.exp=ex;
-      const c=ix[key];if(c)up.push([c,o]);else if(o.bill>0)nw.push([nm,o]);else skip++;
-    });
-    if(!nw.length&&!up.length)return alert('Koi sahi row nahi mili. Naam aur bill wale columns dekhein.');
-    if(!confirm(nw.length+' naye customers, '+up.length+' purane update, '+skip+' rows chhor di. Mahina: '+mlabel(m)+'. Jaari rakhein?'))return;
-    const w=$('worker').value.trim()||ME.name;let i=0,pc=0;
-    const set=(c,o)=>{const{paid,prev,...rest}=o;Object.assign(c,rest);if(prev!==undefined){c.pm=prev?(c.prev===prev&&c.pm?c.pm:m):'';c.prev=prev}
-      if(rest.area&&!areas.includes(rest.area))areas.push(rest.area);qCust(c);
-      if(paid>0){pays[m+'_'+c.id]={paid,date:'Excel import',worker:w};qPay(c,m,w);pc++}};
-    up.forEach(([c,o])=>set(c,o));
-    nw.forEach(([nm,o])=>{const c={id:Date.now()+(i++),own:VS,name:nm,phone:'',area:areas[0]||'',pkg:'',bill:o.bill,status:'Active',since:m,exp:'',prev:0,pm:''};custs.push(c);set(c,o)});
-    S('si_areas',areas);S('si_pays',pays);closeM();render();sync();
-    alert('Ho gaya: '+nw.length+' naye, '+up.length+' update, '+pc+' payments.');
-  }catch(e){alert('Ye Excel/CSV file nahi parh saka. .xlsx ya .csv file chunein.')}
-}
 window.addEventListener('online',sync);
-try{
-  const h=location.hash;
-  showPick();
-  if(h.startsWith('#add=')){try{const o=JSON.parse(decodeURIComponent(escape(atob(h.slice(5)))));showAdd(o.n,o.u)}catch(e){}history.replaceState(null,'',location.pathname+location.search)}
-}catch(e){console.error(e)}
 </script>
 </body>
 </html>
