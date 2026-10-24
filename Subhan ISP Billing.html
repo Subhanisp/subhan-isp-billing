@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Subhan ISP - Billing</title>
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
+body{margin:0;background:#eef2f7;color:#1c2430;padding-bottom:64px}
+.hdr{background:#0b4fa8;color:#fff;padding:10px 12px;position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 6px #0003}
+.hdr h1{margin:0;font-size:19px}.hdr small{display:block;font-size:11px;opacity:.8}
+.hdr button{background:#ffffff26;border:0;color:#fff;font-size:20px;border-radius:8px;padding:4px 12px}
+#bar{display:none;text-align:center;font-size:12px;font-weight:700;padding:7px}
+.box,.top,.dash{background:#fff;margin:10px;padding:12px;border-radius:10px}
+.top{display:flex;flex-direction:column;gap:8px}
+input,select{width:100%;padding:10px;border:1px solid #c9d1dc;border-radius:7px;font-size:15px;background:#fff}
+label{font-size:12px;font-weight:700;color:#556}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.tiles div{background:#eef2f7;border-radius:8px;padding:8px 2px}.tiles b{display:block;font-size:16px}.tiles span{font-size:11px;color:#556}
+.prog{height:8px;background:#dde3ec;border-radius:5px;margin:10px 0 6px;overflow:hidden}.prog i{display:block;height:100%;background:#1f9d55}
+.cnt{font-size:12px;color:#556;text-align:center}
+.row{display:flex;gap:8px;margin:0 10px 10px}
+.row button,.btn{flex:1;padding:10px;border:0;border-radius:7px;font-weight:700;font-size:14px;background:#3b4658;color:#fff}
+.card{background:#fff;margin:0 10px 10px;padding:12px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;border-left:5px solid #d93a3a}
+.card.Paid{border-left-color:#1f9d55;background:#f5fff8}.card.Partial{border-left-color:#e8a317;background:#fffaf0}
+.info{flex:1;min-width:0}.info h3{margin:0 0 3px;font-size:17px}.info p{margin:0;font-size:13px;color:#556}.info small{font-size:12px;font-weight:700;color:#8a5a00}
+.acts{display:flex;flex-direction:column;gap:6px}
+.bs{border:0;border-radius:7px;color:#fff;font-weight:700;padding:10px 12px;min-width:84px;font-size:14px}
+.bs.Unpaid{background:#d93a3a}.bs.Partial{background:#e8a317}.bs.Paid{background:#1f9d55}
+.wa{border:0;background:#25d366;border-radius:7px;padding:6px;font-size:16px}
+#ov{display:none;position:fixed;inset:0;background:#0007;z-index:200;justify-content:center;align-items:center;padding:10px}
+.m{display:none;background:#fff;border-radius:12px;padding:16px;width:100%;max-width:400px;max-height:90vh;overflow:auto;flex-direction:column;gap:9px}
+.m h3{margin:0}.mb{display:flex;gap:8px;margin-top:4px}
+.g{background:#1f9d55!important}.r{background:#d93a3a!important}.x{background:#6b7585!important}
+.bs.Band{background:#6b7585}.card.Band{opacity:.75}.rec{white-space:pre-wrap;background:#f4f6f9;border-radius:8px;padding:10px;font-size:13px}
+.hist{font-size:13px;border-top:1px solid #e3e8ef;padding:6px 0}
+#login{position:fixed;inset:0;background:#0b4fa8;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff;padding:20px}
+#login h1{margin:0;font-size:30px}#login input{max-width:260px;text-align:center;font-size:22px;letter-spacing:6px}#login .btn{max-width:260px;flex:none;background:#1f9d55}
+.ft{position:fixed;bottom:0;width:100%;background:#111;color:#fff;text-align:center;font-size:11px;padding:9px;z-index:40}.ft b{color:#4ade80}
+</style>
+</head>
+<body>
+<div id="login">
+  <h1>Subhan ISP</h1><div>Billing system - password likhein</div>
+  <input type="password" id="pw" inputmode="numeric" placeholder="••••" onkeydown="if(event.key==='Enter')unlock()">
+  <button class="btn" onclick="unlock()">Open</button>
+  <div id="pwErr" style="color:#ffd0d0;font-weight:700;min-height:20px"></div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="hdr"><div><h1>Subhan ISP</h1><small>Billing Collection</small></div><div><button onclick="loadSheet()">🔄</button> <button onclick="openM('menuM')">⋮</button></div></div>
+  <div id="bar"></div>
+
+  <div class="top">
+    <label>Worker name</label><input id="worker" placeholder="Apna naam likhein" oninput="localStorage.setItem('si_w',this.value)">
+    <label>Mahina</label><select id="month" onchange="render()"></select>
+  </div>
+
+  <div class="dash"><div class="tiles">
+    <div><b id="dTot">0</b><span>Total bill</span></div><div><b id="dCol" style="color:#1f9d55">0</b><span>Wasool</span></div><div><b id="dRem" style="color:#d93a3a">0</b><span>Baqaya</span></div>
+  </div><div class="prog"><i id="dPr" style="width:0"></i></div><div class="cnt" id="dCnt"></div></div>
+
+  <div class="row"><button onclick="custOpen()">➕ Naya customer</button><button onclick="openM('areaM')">🏢 Naya muhalla</button></div>
+
+  <div class="top" style="margin-top:0">
+    <input id="search" placeholder="🔍 Naam ya phone se dhoondein" oninput="render()">
+    <select id="statF" onchange="render()"><option value="All">Sab (Paid, Partial, Unpaid)</option><option value="Unpaid">Sirf Unpaid</option><option value="Partial">Sirf Partial</option><option value="Paid">Sirf Paid</option><option value="Band">Sirf Band (disconnect)</option><option value="Expired">Sirf Expired (expire date guzar gayi)</option><option value="Due">Expired + Pending (wasooli wale)</option></select>
+    <select id="areaF" onchange="render()"></select>
+  </div>
+
+  <div id="list"></div>
+  <div class="ft">Created by <b>Muhammad Usman</b> | Mobile: 03009774171</div>
+
+  <div id="ov">
+    <div class="m" id="payM"><h3 id="pTitle"></h3><div id="pInfo" style="font-size:14px"></div>
+      <div id="pAmtW"><label>Aaj kitni raqam mili (Rs.)</label><input type="number" id="pAmt"></div>
+      <div class="mb"><button class="btn g" id="pSave" onclick="savePay()">Save payment</button><button class="btn" id="pRec" onclick="showRec(cur)">🧾</button><button class="btn r" id="pReset" onclick="resetPay()">Reset</button><button class="btn x" onclick="closeM()">Band</button></div></div>
+
+    <div class="m" id="custM"><h3 id="cTitle"></h3>
+      <input id="cName" placeholder="Customer ka naam"><input id="cPhone" type="tel" placeholder="Phone (03xx...)"><select id="cArea"></select>
+      <input id="cPkg" placeholder="Package (e.g. 10 Mbps)"><input id="cBill" type="number" placeholder="Monthly bill (Rs.)"><label>Pichhla baqaya (Rs.) - agar koi ho</label><input id="cPrev" type="number"><label>Connection ki tareekh (mahina)</label><input id="cSince" type="month"><label>Status</label><select id="cStat"><option value="Active">Active (chal raha hai)</option><option value="Band">Band (disconnect)</option></select><label>Expire date</label><input id="cExp" type="date">
+      <div class="mb"><button class="btn g" onclick="saveCust()">Save</button><button class="btn x" onclick="closeM()">Cancel</button></div></div>
+
+    <div class="m" id="areaM"><h3>Naya muhalla</h3><input id="aName" placeholder="Muhalla ka naam">
+      <div class="mb"><button class="btn g" onclick="addArea()">Save</button><button class="btn x" onclick="closeM()">Cancel</button></div></div>
+
+    <div class="m" id="detM"><h3 id="dName"></h3><div id="dBody" style="font-size:14px"></div>
+      <div class="mb"><button class="btn" onclick="custOpen(cur)">Edit</button><button class="btn r" onclick="delCust()">Delete</button></div>
+      <div class="mb"><button class="btn g" onclick="wa(cur)">📲 WhatsApp</button><button class="btn x" onclick="closeM()">Band</button></div></div>
+
+    <div class="m" id="recM"><h3>Raseed</h3><div class="rec" id="recT"></div><div class="mb"><button class="btn g" id="recWa" onclick="recWa()">📲 WhatsApp</button><button class="btn x" onclick="closeM()">Band</button></div></div>
+    <div class="m" id="menuM"><h3>Menu</h3>
+      <button class="btn" onclick="openM('areaM')">🏢 Naya muhalla</button>
+      <button class="btn" onclick="backup()">💾 Backup download karein</button>
+      <button class="btn" onclick="$('rf').click()">📂 Backup restore karein</button>
+      <input type="file" id="rf" accept=".json" style="display:none" onchange="restore(this)">
+      <button class="btn" onclick="setUrl()">🔗 Google Sheet URL set karein</button>
+      <button class="btn" onclick="loadSheet()">⬇️ Sheet se data load karein</button>
+      <button class="btn" onclick="syncAll()">☁️ Sab data Sheet mein bhejein</button>
+      <button class="btn x" onclick="closeM()">Band</button></div>
+  </div>
+</div>
+
+<script>
+const KEY="";            // Apps Script ki secret key (optional, code.gs mein bhi wahi likhein)
+const PWH=5596543922622224;
+const DEFAULT_URL=""; // yahan apna Web app URL likh dein to har phone par set karna nahi parega
+const U=()=>localStorage.getItem('si_url')||DEFAULT_URL;
+const $=id=>document.getElementById(id);
+const H=s=>{let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0,c;i<s.length;i++){c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0)};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const L=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
+const S=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const p2=n=>String(n).padStart(2,'0');
+const MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const mlabel=v=>MN[+v.slice(5)-1]+' '+v.slice(0,4);
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())};
+const fd=s=>String(s).split('-').reverse().join('-');
+const now=()=>{const d=new Date();return p2(d.getDate())+'-'+p2(d.getMonth()+1)+'-'+d.getFullYear()+' '+p2(d.getHours())+':'+p2(d.getMinutes())};
+
+let areas=L('si_areas',["Area 1","Area 2"]),custs=L('si_custs',[]),pays=L('si_pays',{}),q=L('si_q',[]),cur=null,editId=null,syncing=false;
+
+function unlock(){
+  if(H('sisp|'+$('pw').value)===PWH){$('login').style.display='none';$('app').style.display='block';init()}
+  else{$('pwErr').textContent='Password galat hai';$('pw').value=''}
+}
+function init(){
+  $('worker').value=localStorage.getItem('si_w')||'';
+  const n=new Date(),cm=n.getFullYear()+'-'+p2(n.getMonth()+1);let y=2026,m=1;
+  for(let i=0;i<60;i++){$('month').add(new Option(MN[m-1]+' '+y,y+'-'+p2(m)));if(++m>12){m=1;y++}}
+  $('month').value=cm;render();loadSheet();
+}
+function openM(id){$('ov').style.display='flex';document.querySelectorAll('.m').forEach(e=>e.style.display='none');$(id).style.display='flex'}
+function closeM(){$('ov').style.display='none'}
+function bar(t,bg,fg,ms){const b=$('bar');b.style.display='block';b.style.background=bg;b.style.color=fg;b.textContent=t;if(ms)setTimeout(()=>b.style.display='none',ms)}
+
+function fillAreas(){
+  const old=$('areaF').value||'All';
+  $('areaF').innerHTML='<option value="All">Sab muhallay</option>'+areas.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');
+  $('areaF').value=areas.includes(old)?old:'All';
+}
+const nm=m=>{let y=+m.slice(0,4),n=+m.slice(5)+1;if(n>12){n=1;y++}return y+'-'+p2(n)};
+function carry(c,m){const s=c.pm||(c.since&&c.since>'2026-10'?c.since:'2026-10');if(m<s)return 0;let b=c.pm?(c.prev||0):0,k=s;for(let i=0;i<60&&k<m;i++){const p=pays[k+'_'+c.id];b+=(c.status==='Band'?0:c.bill)-(p?p.paid:0);k=nm(k)}return b}
+function st(c,m){const p=pays[m+'_'+c.id],paid=p?p.paid:0,cr=carry(c,m),total=c.bill+cr;return{p,paid,carry:cr,total,rem:Math.max(total-paid,0),s:paid>=total?'Paid':paid>0?'Partial':'Unpaid'}}
+
+function render(){
+  fillAreas();
+  const m=$('month').value,t=$('search').value.toLowerCase(),a=$('areaF').value,f=$('statF').value;
+  let h='',n=0,tot=0,col=0,exN=0,cnt={Paid:0,Partial:0,Unpaid:0};
+  custs.forEach(c=>{
+    const exp=c.status!=='Band'&&!!c.exp&&c.exp<today();if(exp)exN++;
+    if(c.since&&c.since>m&&f!=='Expired')return;
+    const x=st(c,m),band=c.status==='Band';
+    if(!band){tot+=x.total;col+=Math.min(x.paid,x.total);cnt[x.s]++}
+    if(!(c.name.toLowerCase().includes(t)||(c.phone||'').includes(t)))return;
+    if(a!=='All'&&c.area!==a)return;if(f==='Band'?!band:f==='Expired'?!exp:f==='Due'?(band||!(exp||x.s!=='Paid')):(f!=='All'&&(band||f!==x.s)))return;
+    n++;
+    h+=`<div class="card ${band?'Band':x.s}"><div class="info" onclick="detail(${c.id})"><h3>${esc(c.name)}</h3><p>${esc(c.area)} | ${esc(c.pkg||'-')} | Rs. ${c.bill}${x.carry?' + Pichhla '+x.carry:''}</p>${c.exp?`<p style="color:${exp?'#d93a3a':'#556'};font-weight:${exp?700:400}">${exp?'Expired':'Expire'}: ${fd(c.exp)}</p>`:''}${x.p?`<br><small>Diya: Rs. ${x.paid} | Baqaya: Rs. ${x.rem}</small>`:''}</div>
+    <div class="acts"><button class="bs ${band?'Band':x.s}" onclick="payOpen(${c.id})">${band?'Band':x.s==='Paid'?'Paid ✓':x.s}</button>${x.s!=='Paid'&&!band&&c.phone?`<button class="wa" onclick="wa(${c.id})">📲</button>`:''}</div></div>`;
+  });
+  $('list').innerHTML=h||'<p style="text-align:center;color:#777;padding:20px">Koi customer nahi mila. "Naya customer" se add karein.</p>';
+  $('dTot').textContent=tot;$('dCol').textContent=col;$('dRem').textContent=tot-col;
+  $('dPr').style.width=(tot?col/tot*100:0)+'%';
+  $('dCnt').textContent=`Paid ${cnt.Paid} | Partial ${cnt.Partial} | Unpaid ${cnt.Unpaid} | Expired ${exN}`+(q.length?` | Sync baqaya: ${q.length}`:'');
+}
+
+function qPay(c,m,w){
+  const x=st(c,m),p=x.p||{};
+  q.push({t:'pay',key:m+'_'+c.id,month:m,id:c.id,name:c.name,area:c.area,phone:c.phone||'',pkg:c.pkg||'',bill:c.bill,paid:x.paid,rem:x.rem,status:x.s,date:p.date||'',worker:w});
+  S('si_q',q);S('si_pays',pays);
+}
+function payOpen(id){
+  cur=id;const c=custs.find(x=>x.id===id),x=st(c,$('month').value);
+  $('pTitle').textContent=c.name;
+  $('pInfo').innerHTML=`Bill: <b>Rs. ${c.bill}</b>${x.carry?` | Pichhla: <b>Rs. ${x.carry}</b>`:''} | Diya: <b>Rs. ${x.paid}</b> | Baqaya: <b>Rs. ${x.rem}</b>`+(x.p?`<br><small>Aakhri: ${esc(x.p.date)} (${esc(x.p.worker)})</small>`:'');
+  $('pAmt').value=x.rem||'';
+  $('pAmtW').style.display=$('pSave').style.display=x.rem?'block':'none';
+  $('pReset').style.display=$('pRec').style.display=x.paid?'block':'none';
+  openM('payM');
+}
+function worker(){const w=$('worker').value.trim();if(!w)alert('Pehle apna (worker) naam likhein');return w}
+function savePay(){
+  const w=worker();if(!w)return;
+  const c=custs.find(x=>x.id===cur),m=$('month').value,x=st(c,m),amt=+$('pAmt').value;
+  if(!(amt>0))return alert('Raqam likhein');
+  if(amt>x.rem)return alert('Raqam baqaya (Rs. '+x.rem+') se zyada hai');
+  pays[m+'_'+c.id]={paid:x.paid+amt,date:now(),worker:w};ext(c,m);
+  qPay(c,m,w);closeM();render();sync();
+}
+function resetPay(){
+  const w=worker();if(!w)return;
+  if(!confirm('Is mahine ki payment khatam karke Unpaid karein?'))return;
+  const c=custs.find(x=>x.id===cur),m=$('month').value;
+  unext(c,m);delete pays[m+'_'+c.id];qPay(c,m,w);closeM();render();sync();
+}
+
+function custOpen(id){
+  editId=id||null;const c=id?custs.find(x=>x.id===id):{};
+  $('cTitle').textContent=id?'Customer edit karein':'Naya customer';
+  $('cArea').innerHTML=areas.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');
+  $('cName').value=c.name||'';$('cPhone').value=c.phone||'';$('cPkg').value=c.pkg||'';$('cBill').value=c.bill||'';
+  $('cSince').value=c.since||(id?'':$('month').value);$('cStat').value=c.status||'Active';$('cExp').value=c.exp||'';$('cPrev').value=c.prev||'';if(c.area)$('cArea').value=c.area;openM('custM');
+}
+function qCust(c,del){q.push({t:'cust',id:c.id,name:c.name,phone:c.phone||'',area:c.area,pkg:c.pkg||'',bill:c.bill,status:c.status||'Active',since:c.since||'',exp:c.exp||'',prev:c.prev||0,pm:c.pm||'',del:del?1:0});S('si_q',q);S('si_custs',custs)}
+function saveCust(){
+  const name=$('cName').value.trim(),bill=+$('cBill').value;
+  if(!name||!(bill>0))return alert('Naam aur bill dono likhein');
+  const o={name,phone:$('cPhone').value.trim(),area:$('cArea').value,pkg:$('cPkg').value.trim(),bill,since:$('cSince').value,status:$('cStat').value,exp:$('cExp').value,prev:+$('cPrev').value||0};
+  let c;
+  if(editId){c=custs.find(x=>x.id===editId);o.pm=o.prev?(c.prev===o.prev&&c.pm?c.pm:$('month').value):'';Object.assign(c,o)}else{c={id:Date.now(),...o,pm:o.prev?$('month').value:''};custs.push(c)}
+  qCust(c);closeM();render();sync();
+}
+function addArea(){
+  const a=$('aName').value.trim();if(!a)return;
+  if(!areas.includes(a)){areas.push(a);S('si_areas',areas)}
+  $('aName').value='';closeM();render();
+}
+function detail(id){
+  cur=id;const c=custs.find(x=>x.id===id);$('dName').textContent=c.name;
+  const hs=Object.keys(pays).filter(k=>k.endsWith('_'+id)).sort().reverse().map(k=>{const p=pays[k];return`<div class="hist"><b>${mlabel(k.split('_')[0])}</b>: Rs. ${p.paid} / ${c.bill}<br><small>${esc(p.date)} (${esc(p.worker)})</small></div>`}).join('');
+  $('dBody').innerHTML=`Phone: <b>${esc(c.phone||'-')}</b><br>Muhalla: <b>${esc(c.area)}</b><br>Package: <b>${esc(c.pkg||'-')}</b><br>Connection: <b>${esc(c.since||'-')}</b> | Status: <b>${esc(c.status||'Active')}</b><br>Expire date: <b>${esc(c.exp?fd(c.exp):'-')}</b><br>Pichhla baqaya: <b>Rs. ${c.prev||0}</b><br>Monthly bill: <b>Rs. ${c.bill}</b><br><br><b>Payment history</b>${hs||'<div class="hist">Abhi koi payment nahi</div>'}`;
+  openM('detM');
+}
+function delCust(){
+  if(!confirm('Is customer ko list se hatana hai?'))return;
+  const c=custs.find(x=>x.id===cur);custs=custs.filter(x=>x.id!==cur);qCust(c,1);closeM();render();sync();
+}
+function wa(id){
+  const c=custs.find(x=>x.id===id),m=$('month').value,x=st(c,m);
+  if(!c.phone)return alert('Is customer ka phone number nahi hai');
+  let ph=c.phone.replace(/\D/g,'');if(ph[0]==='0')ph='92'+ph.slice(1);
+  const msg=`Assalam o Alaikum ${c.name}, Subhan ISP ki taraf se yaad dehani: ${mlabel(m)} ka Rs. ${x.rem||c.bill} baqaya hai. Meherbani karke bill ada kar dein. Shukriya.`;
+  window.open('https://wa.me/'+ph+'?text='+encodeURIComponent(msg),'_blank');
+}
+
+function backup(){
+  const b=new Blob([JSON.stringify({areas,custs,pays})],{type:'application/json'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download='subhan-isp-backup-'+now().slice(0,10)+'.json';a.click();closeM();
+}
+function restore(inp){
+  const f=inp.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.custs)||!d.pays)throw 0;
+    if(!confirm('Maujooda data ki jagah backup ka data aayega. Jaari rakhein?'))return;
+    areas=d.areas||areas;custs=d.custs;pays=d.pays;S('si_areas',areas);S('si_custs',custs);S('si_pays',pays);closeM();render();if(U())syncAll()}
+    catch(e){alert('Ye sahi backup file nahi hai')}};
+  r.readAsText(f);inp.value='';
+}
+
+function setUrl(){
+  const u=prompt('Apni Google Apps Script Web App ka URL paste karein:',localStorage.getItem('si_url')||'');
+  if(u!==null){localStorage.setItem('si_url',u.trim());closeM();if(u.trim())custs.length?syncAll():loadSheet()}
+}
+function syncAll(){
+  if(!U())return alert('Pehle Google Sheet URL set karein');
+  q=[{t:'reset'}];q=q.concat(custs.map(c=>({t:'cust',id:c.id,name:c.name,phone:c.phone||'',area:c.area,pkg:c.pkg||'',bill:c.bill,status:c.status||'Active',since:c.since||'',exp:c.exp||'',prev:c.prev||0,pm:c.pm||'',del:0})));
+  Object.keys(pays).forEach(k=>{const[m,id]=k.split('_'),c=custs.find(x=>x.id==id);if(!c)return;const p=pays[k];
+    q.push({t:'pay',key:k,month:m,id:c.id,name:c.name,area:c.area,phone:c.phone||'',pkg:c.pkg||'',bill:c.bill,paid:p.paid,rem:st(c,m).rem,status:st(c,m).s,date:p.date,worker:p.worker})});
+  S('si_q',q);closeM();sync();
+}
+async function sync(){
+  const url=U();
+  if(!url||!q.length||!navigator.onLine||syncing)return;
+  syncing=true;const n=q.length,batch=q.slice(0,n);
+  bar('Sheet mein '+n+' records bhej rahe hain...','#ffc107','#000');
+  try{
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({key:KEY,items:batch})});
+    const j=await r.json();if(!j.ok)throw new Error('server');
+    q=q.slice(n);S('si_q',q);bar('Google Sheet mein save ho gaya ✓','#1f9d55','#fff',3000);
+  }catch(e){bar('Sync nahi hua. Data phone mein mehfooz hai, net aane par dobara bhejega.','#d93a3a','#fff',4500)}
+  syncing=false;render();
+}
+function addM(s,n){let[y,m,d]=s.split('-').map(Number);m+=n;while(m>12){m-=12;y++}while(m<1){m+=12;y--}return y+'-'+p2(m)+'-'+p2(Math.min(d,new Date(y,m,0).getDate()))}
+function ext(c,m){const p=pays[m+'_'+c.id];if(c.exp&&c.status!=='Band'&&!p.ext&&st(c,m).s==='Paid'){const cr=carry(c,m),n=Math.min(12,1+(c.bill>0&&cr>0?Math.floor(cr/c.bill):0));p.ext=c.exp;p.extn=n;c.exp=addM(c.exp,n);qCust(c)}}
+function unext(c,m){const p=pays[m+'_'+c.id];if(p&&p.ext&&c.exp===addM(p.ext,p.extn||1)){c.exp=p.ext;qCust(c)}}
+let recPh='',recMsg='';
+const _sp=savePay;
+savePay=function(){const k=$('month').value+'_'+cur,b=(pays[k]||{}).paid||0;_sp();const p=pays[k];if(p&&p.paid>b){p.last=p.paid-b;S('si_pays',pays);showRec(cur)}};
+function showRec(id){
+  const c=custs.find(x=>x.id===id),m=$('month').value,x=st(c,m),p=x.p;if(!p)return;
+  recMsg=`*Subhan ISP - Raseed*\nNaam: ${c.name}\nMuhalla: ${c.area}\nMahina: ${mlabel(m)}\n`+(p.last?`Is dafa mili: Rs. ${p.last}\n`:'')+`Total diya: Rs. ${x.paid} / ${x.total}\nBaqaya: Rs. ${x.rem}\n${c.exp?'Expire date: '+fd(c.exp)+'\n':''}Tareekh: ${p.date}\nWasool karne wala: ${p.worker}\nShukriya!`;
+  recPh=c.phone||'';$('recT').textContent=recMsg;$('recWa').style.display=recPh?'block':'none';openM('recM');
+}
+function recWa(){let ph=recPh.replace(/\D/g,'');if(ph[0]==='0')ph='92'+ph.slice(1);window.open('https://wa.me/'+ph+'?text='+encodeURIComponent(recMsg),'_blank')}
+async function loadSheet(){
+  const url=U();if(!url||!navigator.onLine||syncing)return;
+  if(q.length){await sync();if(q.length)return}
+  bar('Sheet se data la rahe hain...','#ffc107','#000');
+  try{
+    const r=await fetch(url+(url.includes('?')?'&':'?')+'action=load&key='+encodeURIComponent(KEY));
+    const j=await r.json();if(!j.ok)throw 0;
+    if(!j.custs.length&&custs.length){bar('Sheet khali hai, phone ka data rakha gaya','#e8a317','#000',3500);return}
+    custs=j.custs.map(c=>({id:+c.id,name:String(c.name),phone:String(c.phone||''),area:String(c.area||''),pkg:String(c.pkg||''),bill:+c.bill,status:c.status==='Band'?'Band':'Active',since:String(c.since||''),exp:String(c.exp||''),prev:+c.prev||0,pm:String(c.pm||'')}));
+    const ids=new Set(custs.map(c=>c.id)),oldp=pays;pays={};
+    j.pays.forEach(p=>{const id=p.key.split('_')[1];if(ids.has(+id)&&+p.paid>0)pays[p.key]={paid:+p.paid,date:String(p.date||''),worker:String(p.worker||''),ext:(oldp[p.key]||{}).ext,extn:(oldp[p.key]||{}).extn}});
+    custs.forEach(c=>{if(c.area&&!areas.includes(c.area))areas.push(c.area)});
+    S('si_custs',custs);S('si_pays',pays);S('si_areas',areas);
+    bar('Sheet se data aa gaya ✓','#1f9d55','#fff',2500);
+  }catch(e){bar('Sheet se data nahi aaya. Phone ka data dikha rahe hain.','#d93a3a','#fff',4000)}
+  render();
+}
+window.addEventListener('online',sync);
+</script>
+</body>
+</html>
